@@ -1,0 +1,96 @@
+### Python ###
+# Виртуальное окружение
+venv/
+env/
+.venv/
+venv*/
+ENV/
+
+# Файлы кэша Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Распределения и установки
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+### Django ###
+# Локальные настройки
+local_settings.py
+.env
+.env.local
+.env.*.local
+secrets.py
+
+# База данных (SQLite пример)
+*.sqlite3
+*.db
+
+# Статические файлы (если не хранятся в репозитории)
+/staticfiles/
+/mediafiles/
+
+### IDE ###
+# PyCharm
+.idea/
+*.iml
+.idea_modules/
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Sublime Text
+*.sublime-workspace
+
+### Логи и отладочные данные ###
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### Системные файлы ###
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+### Тестовые покрытия ###
+.coverage
+htmlcov/
+.coverage.*
+.pytest_cache/
+
+### Миграции (не рекомендуется игнорировать, но на случай)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+### Docker ###
+docker-compose.override.yml
+.env.prod

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container text-center mt-5">
+        <h1>400 - Неверный запрос</h1>
+        <p>Извините, но ваш запрос не может быть обработан. Пожалуйста, проверьте введенные данные и попробуйте снова.</p>
+        <a href="{% url 'orders:order_list' %}" class="btn btn-primary mt-3">Вернуться на главную</a>
+    </div>
+{% endblock %}

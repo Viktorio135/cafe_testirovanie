@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .dynamic-form {
+        margin-bottom: 1.5rem;
+        display: flex !important;
+        align-items: center;
+        width: 100%;
+    }
+    .delete-form {
+        cursor: pointer;
+        color: #dc3545;
+        margin-left: 15px;
+    }
+    .hidden-form {
+        display: none !important;
+    }
+    #items-container .form-control {
+        width: 100% !important;
+        height: auto !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Создание нового заказа</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" novalidate id="order-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <h3>Блюда</h3>
+        {{ order_item_formset.management_form }}
+        <div id="items-container">
+            {% for form in order_item_formset %}
+                <div class="dynamic-form">
+                    {{ form.as_p }}
+                    {% if form.instance.pk %}
+                        <span class="delete-form">Удалить</span>
+                        {{ form.DELETE }}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">Создать заказ</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('items-container');
+        const addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.textContent = 'Добавить блюдо';
+        addButton.className = 'btn btn-secondary';
+        addButton.addEventListener('click', function() {
+            const formCount = document.getElementById('id_orderitem_set-TOTAL_FORMS');
+            const totalForms = parseInt(formCount.value);
+            const newForm = container.querySelector('.dynamic-form').cloneNode(true);
+
+            // Update the form fields' names and IDs
+            newForm.innerHTML = newForm.innerHTML.replace(/orderitem_set-(\d+)-/g, `orderitem_set-${totalForms}-`);
+            newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, totalForms);
+
+            container.appendChild(newForm);
+            formCount.value = totalForms + 1;
+
+            // Add event listener to the delete button of the new form
+            const deleteButton = newForm.querySelector('.delete-form');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', function() {
+                    newForm.classList.add('hidden-form'); // Hide the form using CSS class
+                    const deleteInput = newForm.querySelector('input[type="checkbox"][name$="-DELETE"]');
+                    if (deleteInput) {
+                        deleteInput.checked = true;
+                    }
+                });
+            }
+        });
+        container.parentNode.insertBefore(addButton, container.nextSibling);
+
+        // Add event listeners to existing delete buttons
+        const deleteButtons = container.querySelectorAll('.delete-form');
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const form = button.closest('.dynamic-form');
+                form.classList.add('hidden-form'); // Hide the form using CSS class
+                const deleteInput = form.querySelector('input[type="checkbox"][name$="-DELETE"]');
+                if (deleteInput) {
+                    deleteInput.checked = true;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

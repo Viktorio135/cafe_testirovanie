@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container text-center mt-5">
+        <h1>404 - Страница не найдена</h1>
+        <p>Извините, но запрашиваемая вами страница не найдена.</p>
+        <a href="{% url 'orders:order_list' %}" class="btn btn-primary mt-3">Вернуться на главную</a>
+    </div>
+{% endblock %}

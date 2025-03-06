@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Изменение заказа</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <h3>Блюда</h3>
+            {{ order_item_formset.management_form }}
+            <div id="items-container">
+                {% for form in order_item_formset %}
+                    <div class="dynamic-form">
+                        {{ form.as_p }}
+                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Сохранить изменения</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('items-container');
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.textContent = 'Добавить блюдо';
+            addButton.className = 'btn btn-secondary';
+            addButton.addEventListener('click', function() {
+                const formCount = document.getElementById('id_orderitem_set-TOTAL_FORMS');
+                const totalForms = parseInt(formCount.value);
+                const newForm = container.querySelector('.dynamic-form').cloneNode(true);
+
+                newForm.innerHTML = newForm.innerHTML.replace(/orderitem_set-(\d+)-/g, `orderitem_set-${totalForms}-`);
+                newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, totalForms);
+
+                container.appendChild(newForm);
+                formCount.value = totalForms + 1;
+            });
+            container.parentNode.insertBefore(addButton, container.nextSibling);
+        });
+    </script>
+{% endblock %}
